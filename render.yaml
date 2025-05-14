@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: mobile-flask-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python API.py
+    envVars:
+      - key: FLASK_ENV
+        value: production
+    plan: free
