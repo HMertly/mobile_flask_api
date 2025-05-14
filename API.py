@@ -12,6 +12,11 @@ interpreter.allocate_tensors()
 input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
 
+# Render kontrol endpoint'i
+@app.route('/', methods=['GET'])
+def index():
+    return "✅ Activity Detection API is running!", 200
+
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
