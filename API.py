@@ -12,7 +12,8 @@ interpreter.allocate_tensors()
 input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
 
-# Render kontrol endpoint'i
+LABELS = ["Downstairs", "Jogging", "Sitting", "Standing", "Upstairs", "Walking"]
+
 @app.route('/', methods=['GET'])
 def index():
     return "✅ Activity Detection API is running!", 200
@@ -35,6 +36,27 @@ def predict():
 
     except Exception as e:
         print("🛑 Tahmin sırasında hata:", e)
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/probabilities', methods=['POST'])
+def predict_with_probabilities():
+    try:
+        data = request.json
+        features = data['features']
+        input_data = np.array(features, dtype=np.float32).reshape(1, 562, 1)
+        interpreter.set_tensor(input_details[0]['index'], input_data)
+        interpreter.invoke()
+        output_data = interpreter.get_tensor(output_details[0]['index'])[0]
+
+        probabilities = {LABELS[i]: float(output_data[i]) for i in range(len(LABELS))}
+        predicted_class = LABELS[int(np.argmax(output_data))]
+
+        return jsonify({
+            'prediction': predicted_class,
+            'probabilities': probabilities
+        })
+    except Exception as e:
+        print("🛑 Tahmin + prob sırasında hata:", e)
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
