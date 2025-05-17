@@ -13,7 +13,7 @@ input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
 
 # Etiketler (modelin sınıf sıralamasına göre!)
-LABELS = ["Downstairs", "Jogging", "Sitting", "Standing", "Upstairs", "Walking"]
+LABELS = ["Downstairs", "Standing", "Jogging", "Walking", "Sitting", "Upstairs"]
 
 # Softmax fonksiyonu
 def softmax(x):
